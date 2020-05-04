@@ -1,0 +1,23 @@
+{
+  "name": "busdepot_dispatcher",
+  "version": "1.0.0",
+  "description": "Dyspozytor",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsonta/BusDepot_Part2.git"
+  },
+  "author": "jsonta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jsonta/BusDepot_Part2/issues"
+  },
+  "homepage": "https://github.com/jsonta/BusDepot_Part2#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.3"
+  }
+}
