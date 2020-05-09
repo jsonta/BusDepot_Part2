@@ -1,18 +1,13 @@
 const router = require('express').Router();
-const resources = require('./db/resources.js');
+const departures = require('./db/departures.js');
+const exits = require('./db/exits.js');
 
-const readBrigade = resources.readBrigadeInSrvStatus;
-const readBus = resources.readBusInSrvStatus;
-const readDriver = resources.readDriverInSrvStatus;
-const flipBrigade = resources.flipBrigadeInSrvStatus;
-const flipBus = resources.flipBusInSrvStatus;
-const flipDriver = resources.flipDriverInSrvStatus;
+router.get('/getDeparturesList/', function(req, res) { departures.getDeparturesList(req, res) });
+router.get('/getDepartureById/:id', function(req, res) { departures.getDepartureById(req, res) });
+router.post('/logDeparture', function(req, res) { departures.logDeparture(req, res) });
 
-router.get('/readBrigadeInSrvStatus/:id', function(req, res) { readBrigade(req, res) });
-router.get('/readBusInSrvStatus/:id', function(req, res) { readBus(req, res) });
-router.get('/readDriverInSrvStatus/:id', function(req, res) { readDriver(req, res) });
-router.get('/flipBrigadeInSrvStatus/:id', function(req, res) { flipBrigade(req, res) });
-router.get('/flipBusInSrvStatus/:id', function(req, res) { flipBus(req, res) });
-router.get('/flipDriverInSrvStatus/:id', function(req, res) { flipDriver(req, res) });
+router.get('/getExitsList/', function(req, res) { exits.getExitsList(req, res) });
+router.get('/getExitById/:id', function(req, res) { exits.getExitById(req, res) });
+router.post('/logExit', function(req, res) { exits.logExit(req, res) });
 
 module.exports = router;
