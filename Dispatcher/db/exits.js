@@ -105,6 +105,7 @@ var logExit = async function (request, response) {
     // i po drodze nie wystapil zaden blad podczas
     // odczytu z bazy danych.
     if (resourcesBusy) {
+        let dateNow = moment();
         await new Promise((resolve, reject) => {
             pool.query('INSERT INTO exits (date, time, brigade, bus_id, driver) VALUES ($1, $2, $3, $4, $5) RETURNING *',
             [dateNow.format('YYYY-MM-DD'), dateNow.format('HH:mm:ss'), brigade, bus_id, driver],
@@ -116,7 +117,7 @@ var logExit = async function (request, response) {
             });
         })
         .then((exit) => {
-            responseMsg = `Exit added with ID: ${exit.id})`;
+            responseMsg = `Exit added with ID: ${exit.id}`;
         })
         .catch((err) => {
             responseCode = 400;
