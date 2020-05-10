@@ -7,11 +7,20 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Dispatcher",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\Dispatcher\\app.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "VehicleControl",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\VehicleControl\\app.js"
         }
     ]
 }

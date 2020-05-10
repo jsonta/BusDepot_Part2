@@ -1,0 +1,409 @@
+{
+	"info": {
+		"_postman_id": "09a3fcb5-e073-4efe-a582-668963de3a68",
+		"name": "VehicleControl",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getPersonsList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5003/api/getpersonslist",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"getpersonslist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPersonById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5003/api/getpersonbyid/73091483007",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"getpersonbyid",
+						"73091483007"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "postPerson",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 73091483007,\n\t\"fname\": \"Wisława\",\n\t\"lname\": \"Wiśniewska\",\n\t\"idcard\": \"AIF986231\",\n\t\"phone\": 799834619,\n\t\"email\": \"WislawaWisniewska@teleworm.us\",\n\t\"bday_date\": \"1973-09-14\",\n\t\"addr_strtname\": \"Jodłowa\",\n\t\"addr_bldgname\": 107,\n\t\"city\": \"Świętochłowice\",\n\t\"zip\": \"41-608\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5003/api/postperson",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"postperson"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updatePerson",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"addr_strtname\": \"Jodłowa\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5003/api/updateperson/73091483007",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"updateperson",
+						"73091483007"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deletePerson",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"addr_strtname\": \"Jodłowa\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5003/api/deleteperson/73091483007",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"deleteperson",
+						"73091483007"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getVehiclesList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5003/api/getvehicleslist",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"getvehicleslist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getVehicleById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5003/api/getvehiclebyid/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"getvehiclebyid",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "postVehicle",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"brand\": \"Audi\",\n\t\"model\": \"S3\",\n\t\"vrn\": \"CB 6262P\",\n\t\"person\": 73091483007,\n\t\"vin\": \"WAUBGCFL0A0015376\",\n\t\"yr_prod\": 2009,\n\t\"mileage\": 170000,\n\t\"eng_cpct\": 2000,\n\t\"eng_type\": \"diesel\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5003/api/postvehicle",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"postvehicle"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateVehicle",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"vrn\": \"SK 777LL\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5003/api/updatevehicle/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"updatevehicle",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteVehicle",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"addr_strtname\": \"Jodłowa\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5003/api/deletevehicle/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"deletevehicle",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getResultsList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5003/api/getresultslist",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"getresultslist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getResultById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5003/api/getresultbyid/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"getresultbyid",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "postResult",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"car_id\": 4,\n\t\"brkds_front_test\": true,\n\t\"brkpd_front_test\": true,\n\t\"brkds_rear_test\": true,\n\t\"brkpd_rear_test\": true,\n\t\"brkdrum_test\": true\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5003/api/postresult",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"postresult"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateResult",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"brkdrum_test\": false\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5003/api/updateresult/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"updateresult",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteResult",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5003/api/deleteresult/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"api",
+						"deleteresult",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
