@@ -37,7 +37,7 @@ var postPerson = function(request, response) {
 
     pool.query('INSERT INTO vc_persons VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
     [id, fname, lname, idcard, phone, email, bday_date, addr_strtname, addr_bldgname, addr_apmtname, city, zip],
-    (err, results) => {
+    (err, _results) => {
         if (err)
             response.status(400).send(`Error: ${err.message} (${err.code})`);
         else
