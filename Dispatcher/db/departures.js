@@ -6,7 +6,7 @@ const moment = require('moment');
 var getDeparturesList = function(_request, response) {
     pool.query('SELECT * FROM departures', (err, results) => {
         if (err)
-            response.status(400).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Error: ${err.message} (${err.code})`);
         else
             response.status(200).json(results.rows);
     });
@@ -18,10 +18,10 @@ var getDepartureById = function(request, response) {
     let id = parseInt(request.params.id);
     pool.query('SELECT * FROM departures WHERE id = $1', [id], (err, results) => {
         if (err)
-            response.status(400).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Error: ${err.message} (${err.code})`);
         else {
             if (results.rows.length == 0) {
-                response.sendStatus(404);
+                response.status(404).send("Nie znaleziono");
             } else {
                 response.status(200).json(results.rows[0]);
             }
@@ -38,7 +38,7 @@ var logDeparture = async function (request, response) {
     } = request.body;
 
     // Wstepne wartosci kodu i tresci odpowiedzi HTTP.
-    let responseCode = 201;
+    let responseCode = 200;
     let responseMsg = 'OK';
 
     // Wstepne wartosci statusow zajetosci zasobow.
@@ -52,7 +52,7 @@ var logDeparture = async function (request, response) {
     await resources.getBrigadeInSrvStatus(brigade)
     .then((in_service) => brigadeInSrv = !!in_service)
     .catch((err) => {
-        responseCode = 400;
+        responseCode = 500;
         responseMsg = `${err.message} (SQL code: ${err.code})`;
         lastOpFailed = !lastOpFailed;
     });
@@ -61,7 +61,7 @@ var logDeparture = async function (request, response) {
         await resources.getBusInSrvStatus(bus_id)
         .then((in_service) => busInSrv = !!in_service)
         .catch((err) => {
-            responseCode = 400;
+            responseCode = 500;
             responseMsg = `${err.message} (SQL code: ${err.code})`;
             lastOpFailed = !lastOpFailed;
         });
@@ -71,7 +71,7 @@ var logDeparture = async function (request, response) {
         await resources.getDriverInSrvStatus(driver)
         .then((in_service) => driverInSrv = !!in_service)
         .catch((err) => {
-            responseCode = 400;
+            responseCode = 500;
             responseMsg = `${err.message} (SQL code: ${err.code})`;
             lastOpFailed = !lastOpFailed;
         });
@@ -117,10 +117,10 @@ var logDeparture = async function (request, response) {
             });
         })
         .then((departure) => {
-            responseMsg = `Departure added with ID: ${departure.id}`;
+            responseMsg = `Wyjazd z zajezdni o ID nr ${departure.id} został wyewidencjonowany.`;
         })
         .catch((err) => {
-            responseCode = 400;
+            responseCode = 500;
             responseMsg = `${err.message} (SQL code: ${err.code})`;
             lastOpFailed = !lastOpFailed;
         });
