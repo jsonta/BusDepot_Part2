@@ -63,13 +63,12 @@ router.post('/logExit', function(req, res) { exits.logExit(req, res) });
  *          summary: "Ewidencjonuje wyjazd z zajezdni (quasi-orkiestrator)."
  *          description: "Najpierw proces odczytuje potrzebne dane z tabel Brigades (mikroserwis Connections), Buses i Drivers (mikroserwis Resources). Jeśli podane zasoby nie są zajęte, do tabeli Departures dodawany jest rekord z informacjami o wyjeździe z zajezdni. Następnie we wcześniej odczytywanych tabelach zmieniany jest stan zajętości zasobów."
  *          operationId: "logDeparture"
- *          parameters:
- *                - name: "body"
- *                  in: "query"
- *                  schema:
- *                      $ref: "#/components/schemas/LogDetails"
- *                  required: true
- *                  description: "Informacje do ewidencji wyjazdu (w formie obiektu JSON). Wszystkie pola muszą być wypełnione."
+ *          requestBody:
+ *              description: "Informacje do ewidencji wyjazdu (w formie obiektu JSON). Wszystkie pola muszą być wypełnione."
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: "#/components/schemas/LogDetails"
  *          responses:
  *              "200":
  *                  description: "Operacja przebiegła pomyślnie"
@@ -128,13 +127,12 @@ router.post('/logExit', function(req, res) { exits.logExit(req, res) });
  *      summary: "Ewidencjonuje zjazd do zajezdni (quasi-orkiestrator)."
  *      description: "Najpierw proces odczytuje potrzebne dane z tabel Brigades (mikroserwis Connections), Buses i Drivers (mikroserwis Resources). Jeśli podane zasoby są zajęte, do tabeli Exits dodawany jest rekord z informacjami o zjeździe do zajezdni. Następnie we wcześniej odczytywanych tabelach zmieniany jest stan zajętości zasobów."
  *      operationId: "logExit"
- *      parameters:
- *        - name: "body"
- *          in: "query"
- *          schema:
- *              $ref: "#/components/schemas/LogDetails"
- *          required: true
+ *      requestBody:
  *          description: "Informacje do ewidencji wyjazdu (w formie obiektu JSON). Wszystkie pola muszą być wypełnione."
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/LogDetails"
  *      responses:
  *          "200":
  *              description: "Operacja przebiegła pomyślnie"

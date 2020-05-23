@@ -6,7 +6,7 @@ const options = {
         info: {
             title: 'BusDepot (Dispatcher)',
             description: 'Mikroserwis zarządzający ewidencją wyjazdów i zjazdów do zajezdni.',
-            version: '20200522',
+            version: '20200523',
             contact: {
                 "name": "Jakub Sońta",
                 "url": "https://github.com/jsonta",
@@ -33,8 +33,8 @@ const options = {
                         date: {
                             type: "string",
                             description: "Data wyjazdu/zjazdu z/do zajezdni. Baza danych przechowuje w tej kolumnie TYLKO datę.",
-                            pattern: "\\d{4}-\\d{2}-\\d{2}T{1}\\d{2}:{1}\\d{2}:{1}\\d{2}.{1}\\d{3}Z{1}",
-                            example: "2020-05-08T22:00:00.000Z"
+                            pattern: "\\d{4}-\\d{2}-\\d{2}",
+                            example: "2020-05-08"
                         },
                         time: {
                             type: "string",

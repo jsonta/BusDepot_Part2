@@ -13,8 +13,8 @@ var getBrigadeInSrvStatus = function(id) {
                 resolve(results.rows[0].in_service);
             } else {
                 reject({
-                    errno: 404,
-                    code: "Not Found"
+                    code: 404,
+                    message: "Nie znaleziono"
                 });
             }
         });
@@ -32,8 +32,8 @@ var getBusInSrvStatus = function(id) {
                 resolve(results.rows[0].in_service);
             } else {
                 reject({
-                    errno: 404,
-                    code: "Not Found"
+                    code: 404,
+                    message: "Nie znaleziono"
                 });
             }
         });
@@ -51,8 +51,8 @@ var getDriverInSrvStatus = function(id) {
                 resolve(results.rows[0].in_service);
             } else {
                 reject({
-                    errno: 404,
-                    code: "Not Found"
+                    code: 404,
+                    message: "Nie znaleziono"
                 });
             }
         });

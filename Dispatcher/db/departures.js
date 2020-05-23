@@ -52,8 +52,13 @@ var logDeparture = async function (request, response) {
     await resources.getBrigadeInSrvStatus(brigade)
     .then((in_service) => brigadeInSrv = !!in_service)
     .catch((err) => {
-        responseCode = 500;
-        responseMsg = `${err.message} (SQL code: ${err.code})`;
+        if (err.code == 404) {
+            responseCode = err.code;
+            responseMsg = err.message;
+        } else {
+            responseCode = 500;
+            responseMsg = `${err.message} (SQL code: ${err.code})`;
+        }
         lastOpFailed = !lastOpFailed;
     });
 
@@ -61,8 +66,13 @@ var logDeparture = async function (request, response) {
         await resources.getBusInSrvStatus(bus_id)
         .then((in_service) => busInSrv = !!in_service)
         .catch((err) => {
-            responseCode = 500;
-            responseMsg = `${err.message} (SQL code: ${err.code})`;
+            if (err.code == 404) {
+                responseCode = err.code;
+                responseMsg = err.message;
+            } else {
+                responseCode = 500;
+                responseMsg = `${err.message} (SQL code: ${err.code})`;
+            }
             lastOpFailed = !lastOpFailed;
         });
     }
@@ -71,8 +81,13 @@ var logDeparture = async function (request, response) {
         await resources.getDriverInSrvStatus(driver)
         .then((in_service) => driverInSrv = !!in_service)
         .catch((err) => {
-            responseCode = 500;
-            responseMsg = `${err.message} (SQL code: ${err.code})`;
+            if (err.code == 404) {
+                responseCode = err.code;
+                responseMsg = err.message;
+            } else {
+                responseCode = 500;
+                responseMsg = `${err.message} (SQL code: ${err.code})`;
+            }
             lastOpFailed = !lastOpFailed;
         });
     }
