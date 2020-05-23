@@ -5,7 +5,7 @@ const moment = require('moment');
 var getPersonsList = function(_request, response) {
     pool.query('SELECT * FROM vc_persons', (err, results) => {
         if (err)
-            response.status(400).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Error: ${err.message} (${err.code})`);
         else
             response.status(200).json(results.rows);
     });
@@ -17,10 +17,10 @@ var getPersonById = function(request, response) {
     let id = parseInt(request.params.id);
     pool.query('SELECT * FROM vc_persons WHERE id = $1', [id], (err, results) => {
         if (err)
-            response.status(400).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Error: ${err.message} (${err.code})`);
         else {
             if (results.rows.length == 0) {
-                response.sendStatus(404);
+                response.status(404).send("Nie znaleziono");
             } else {
                 response.status(200).json(results.rows[0]);
             }
@@ -39,9 +39,9 @@ var postPerson = function(request, response) {
     [id, fname, lname, idcard, phone, email, bday_date, addr_strtname, addr_bldgname, addr_apmtname, city, zip],
     (err, _results) => {
         if (err)
-            response.status(400).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Error: ${err.message} (${err.code})`);
         else
-            response.status(201).send(`Person added with ID: ${id}`);
+            response.status(201).send(`Dodano nową osobę o ID nr ${id}.`);
     });
 }
 
@@ -58,7 +58,7 @@ var updatePerson = async function(request, response) {
 
     // Wstepne wartosci kodu i tresci odpowiedzi HTTP.
     let responseCode = 200;
-    let responseMsg = `Person with ID ${id} updated`;
+    let responseMsg = `Dane osoby o ID nr ${id} zostały zaktualizowane`;
 
     // Odczyt wpisu o podanym ID z bazy danych celem uzupelnienia
     // brakujacych danych wymaganych dla kwerendy UPDATE.
@@ -69,45 +69,51 @@ var updatePerson = async function(request, response) {
             if (err)
                 return reject(err);
 
-            resolve(results.rows[0]);
+            resolve(results.rows);
         });
     })
     .then((person) => {
-        if (fname == undefined)
-            fname = person.fname;
+        if (person.length != 0) {
+            if (fname == undefined)
+                fname = person[0].fname;
 
-        if (lname == undefined)
-            lname = person.lname;
+            if (lname == undefined)
+                lname = person[0].lname;
 
-        if (idcard == undefined)
-            idcard = person.idcard;
+            if (idcard == undefined)
+                idcard = person[0].idcard;
 
-        if (phone == undefined)
-            phone = person.phone;
+            if (phone == undefined)
+                phone = person[0].phone;
 
-        if (email == undefined)
-            email = person.email;
+            if (email == undefined)
+                email = person[0].email;
 
-        if (bday_date == undefined)
-            bday_date = person.bday_date;
+            if (bday_date == undefined)
+                bday_date = person[0].bday_date;
         
-        if (addr_strtname == undefined)
-            addr_strtname = person.addr_strtname;
+            if (addr_strtname == undefined)
+                addr_strtname = person[0].addr_strtname;
 
-        if (addr_bldgname == undefined)
-            addr_bldgname = person.addr_bldgname;
+            if (addr_bldgname == undefined)
+                addr_bldgname = person[0].addr_bldgname;
 
-        if (addr_apmtname == undefined)
-            addr_apmtname = person.addr_apmtname;
+            if (addr_apmtname == undefined)
+                addr_apmtname = person[0].addr_apmtname;
 
-        if (city == undefined)
-            city = person.city;
+            if (city == undefined)
+                city = person[0].city;
         
-        if (zip == undefined)
-            zip = person.zip;
+            if (zip == undefined)
+                zip = person[0].zip;
+        } else {
+            responseCode = 404;
+            responseMsg = `Nie znaleziono`;
+            lastOpFailed = !lastOpFailed;
+        }
     })
     .catch((err) => {
-        responseCode = 400;
+        responseCode = 500;
         responseMsg = `Error: ${err.message} (${err.code})`;
         lastOpFailed = !lastOpFailed;
     });
@@ -127,7 +133,7 @@ var updatePerson = async function(request, response) {
             });
         })
         .catch((err) => {
-            responseCode = 400;
+            responseCode = 500;
             responseMsg = `Error: ${err.message} (${err.code})`;
         });
     }
@@ -143,9 +149,9 @@ var deletePerson = function (request, response) {
 
     pool.query('DELETE FROM vc_persons WHERE id = $1', [id], (err, _results) => {
         if (err)
-            response.status(400).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Error: ${err.message} (${err.code})`);
         else
-            response.status(200).send(`Person with ID ${id} deleted`);
+            response.status(200).send(`Osoba o ID nr ${id} została usunięta.`);
     });
 }
 

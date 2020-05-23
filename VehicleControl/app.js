@@ -8,4 +8,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 const routes = require('./routes.js');
 app.use('/api', routes);
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger.js');
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.listen(5003);

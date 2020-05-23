@@ -21,4 +21,337 @@ router.post('/postResult', function(req, res) { results.postResult(req, res) });
 router.put('/updateResult/:id', function(req, res) { results.updateResult(req, res) });
 router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req, res) });
 
+/**
+ * @swagger
+ * /api/getPersonsList:
+ *  get:
+ *      tags:
+ *          - "Persons"
+ *      summary: "Wypisuje wszystkie osoby ze szczegółami, które dotychczas zleciły kontrolę pojazdu, w formie listy."
+ *      operationId: "getPersonsList"
+ *      responses:
+ *          "200":
+ *              description: "Lista obiektów JSON"
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: "#/components/schemas/Person"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/getPersonById/{id}:
+ *  get:
+ *      tags:
+ *          - "Persons"
+ *      summary: "Wypisuje osobę ze szczegółami, która dotychczas zleciła kontrolę pojazdu, określoną przez jej ID."
+ *      operationId: "getPersonById"
+ *      parameters:
+ *        - name: "id"
+ *          in: "path"
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: "Numer PESEL osoby zlecającej kontrolę pojazdu"
+ *          example: 99123100000
+ *      responses:
+ *          "200":
+ *              description: "Obiekt JSON"
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: "#/components/schemas/Person"
+ *          "404":
+ *              description: "Nie znaleziono"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/postPerson:
+ *  post:
+ *      tags:
+ *          - "Persons"
+ *      summary: "Dodaje nową osobę zlecającą kontrolę pojazdu do spisu osób (bazy danych)."
+ *      operationId: "postPerson"
+ *      requestBody:
+ *          description: "Dane osobowe zleceniodawcy (w formie obiektu JSON). Wszystkie muszą być wypełnione, o ile nie zaznaczono inaczej."
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/Person"
+ *      responses:
+ *          "201":
+ *              description: "Utworzono pomyślnie"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/updatePerson/{id}:
+ *  put:
+ *      tags:
+ *          - "Persons"
+ *      summary: "Aktualizuje dane osoby zlecającej kontrolę pojazdu, określoną przez jej ID."
+ *      operationId: "putPerson"
+ *      parameters:
+ *        - name: "id"
+ *          in: "path"
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: "Numer PESEL osoby zlecającej kontrolę pojazdu"
+ *          example: 99123100000
+ *      requestBody:
+ *          description: "Parametry, jakie mają zostać zaktualizowane (w formie obiektu JSON). Wystarczy podać tylko nowe wartości - pozostałe zostaną skopiowane."
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/Person"
+ *      responses:
+ *          "200":
+ *              description: "Operacja ukończona pomyślnie"
+ *          "404":
+ *              description: "Nie znaleziono"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/deletePerson/{id}:
+ *  delete:
+ *      tags:
+ *          - "Persons"
+ *      summary: "Usuwa osobę zlecającą kontrolę pojazdu ze spisu osób (bazy danych)."
+ *      operationId: "deletePerson"
+ *      parameters:
+ *        - name: "id"
+ *          in: "path"
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: "Numer PESEL osoby zlecającej kontrolę pojazdu"
+ *          example: 9912310000
+ *      responses:
+ *          "200":
+ *              description: "Operacja ukończona pomyślnie"
+ *          "404":
+ *              description: "Nie znaleziono"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * 
+ * /api/getResultsList:
+ *  get:
+ *      tags:
+ *          - "Results"
+ *      summary: "Wypisuje wszystkie wyniki kontroli pojazdów ze szczegółami, w formie listy."
+ *      operationId: "getResultsList"
+ *      responses:
+ *          "200":
+ *              description: "Lista obiektów JSON"
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: "#/components/schemas/Result"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/getResultsById/{id}:
+ *  get:
+ *      tags:
+ *          - "Results"
+ *      summary: "Wypisuje wynik kontroli pojazdu ze szczegółami, określony przez jego ID."
+ *      operationId: "getResultsById"
+ *      parameters:
+ *        - name: "id"
+ *          in: "path"
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: "Identyfikator wyniku kontroli"
+ *          example: 1
+ *      responses:
+ *          "200":
+ *              description: "Obiekt JSON"
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: "#/components/schemas/Result"
+ *          "404":
+ *              description: "Nie znaleziono"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/postResult:
+ *  post:
+ *      tags:
+ *          - "Results"
+ *      summary: "Dodaje nowy wynik kontroli pojazdu do ewidencji (bazy danych)."
+ *      operationId: "postResults"
+ *      requestBody:
+ *          description: "Informacje do ewidencji kontroli pojazdu (w formie obiektu JSON). Wszystkie pola muszą być wypełnione."
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/Result"
+ *      responses:
+ *          "201":
+ *              description: "Utworzono pomyślnie"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/updateResult/{id}:
+ *  put:
+ *      tags:
+ *          - "Results"
+ *      summary: "Aktualizuje wynik kontroli pojazdu, określony przez jego ID."
+ *      operationId: "putResults"
+ *      parameters:
+ *        - name: "id"
+ *          in: "path"
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: "Identyfikator wyniku kontroli pojazdu"
+ *          example: 1
+ *      requestBody:
+ *          description: "Parametry, jakie mają zostać zaktualizowane (w formie obiektu JSON). Wystarczy podać tylko nowe wartości - pozostałe zostaną skopiowane."
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/Vehicle"
+ *      responses:
+ *          "200":
+ *              description: "Operacja ukończona pomyślnie"
+ *          "404":
+ *              description: "Nie znaleziono"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/deleteResult/{id}:
+ *  delete:
+ *      tags:
+ *          - "Results"
+ *      summary: "Usuwa wynik kontroli pojazdu z ewidencji (bazy danych)."
+ *      operationId: "deleteResult"
+ *      parameters:
+ *        - name: "id"
+ *          in: "path"
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: "Identyfikator wyniku kontroli pojazdu"
+ *          example: 1
+ *      responses:
+ *          "200":
+ *              description: "Operacja ukończona pomyślnie"
+ *          "404":
+ *              description: "Nie znaleziono"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * 
+ * /api/getVehiclesList:
+ *  get:
+ *      tags:
+ *          - "Vehicles"
+ *      summary: "Wypisuje wszystkie dotychczas skontrolowane pojazdy, w formie listy."
+ *      operationId: "getVehiclesList"
+ *      responses:
+ *          "200":
+ *              description: "Lista obiektów JSON"
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: "#/components/schemas/Vehicle"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/getVehicleById/{id}:
+ *  get:
+ *      tags:
+ *          - "Vehicles"
+ *      summary: "Wypisuje dotychczas skontrolowany pojazd, określony przez jego ID."
+ *      operationId: "getVehicleById"
+ *      parameters:
+ *        - name: "id"
+ *          in: "path"
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: "Identyfikator pojazdu"
+ *          example: 1
+ *      responses:
+ *          "200":
+ *              description: "Obiekt JSON"
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: "#/components/schemas/Vehicle"
+ *          "404":
+ *              description: "Nie znaleziono"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/postVehicle:
+ *  post:
+ *      tags:
+ *          - "Vehicles"
+ *      summary: "Dodaje nowy skontrolowany pojazd do spisu pojazdów (bazy danych)."
+ *      operationId: "postVehicle"
+ *      requestBody:
+ *          description: "Dane techniczne pojazdu (w formie obiektu JSON). Wszystkie pola muszą być wypełnione."
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/Vehicle"
+ *      responses:
+ *          "201":
+ *              description: "Dodano pomyślnie"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/updateVehicle/{id}:
+ *  put:
+ *      tags:
+ *          - "Vehicles"
+ *      summary: "Aktualizuje dane skontrolowanego pojazdu, określonego przez jego ID."
+ *      operationId: "putVehicle"
+ *      parameters:
+ *        - name: "id"
+ *          in: "path"
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: "Identyfikator pojazdu"
+ *          example: 1
+ *      requestBody:
+ *          description: "Parametry, jakie mają zostać zaktualizowane (w formie obiektu JSON). Wystarczy podać tylko nowe wartości - pozostałe zostaną skopiowane."
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/Vehicle"
+ *      responses:
+ *          "200":
+ *              description: "Operacja ukończona pomyślnie"
+ *          "404":
+ *              description: "Nie znaleziono"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ * /api/deleteVehicle/{id}:
+ *  delete:
+ *      tags:
+ *          - "Vehicles"
+ *      summary: "Usuwa skontrolowany pojazd ze spisu pojazdów (bazy danych)."
+ *      operationId: "deleteVehicle"
+ *      parameters:
+ *        - name: "id"
+ *          in: "path"
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: "Identyfikator pojazdu"
+ *          example: 1
+ *      responses:
+ *          "200":
+ *              description: "Operacja ukończona pomyślnie"
+ *          "404":
+ *              description: "Nie znaleziono"
+ *          "500":
+ *              description: "Błąd serwera SQL"
+ */
+
 module.exports = router;

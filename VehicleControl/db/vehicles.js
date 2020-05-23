@@ -4,7 +4,7 @@ const pool = require('./pool.js');
 var getVehiclesList = function(_request, response) {
     pool.query('SELECT * FROM vc_vehicles', (err, results) => {
         if (err)
-            response.status(400).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Error: ${err.message} (${err.code})`);
         else
             response.status(200).json(results.rows);
     });
@@ -16,10 +16,10 @@ var getVehicleById = function(request, response) {
     let id = parseInt(request.params.id);
     pool.query('SELECT * FROM vc_vehicles WHERE id = $1', [id], (err, results) => {
         if (err)
-            response.status(400).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Error: ${err.message} (${err.code})`);
         else {
             if (results.rows.length == 0) {
-                response.sendStatus(404);
+                response.status(404).send("Nie znaleziono");
             } else {
                 response.status(200).json(results.rows[0]);
             }
@@ -37,9 +37,9 @@ var postVehicle = function(request, response) {
     [brand, model, vrn, person, vin, yr_prod, mileage, eng_cpct, eng_type],
     (err, results) => {
         if (err)
-            response.status(400).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Error: ${err.message} (${err.code})`);
         else
-            response.status(201).send(`Vehicle added with ID: ${results.rows[0].id}`);
+            response.status(201).send(`Dodano nowy pojazd o ID nr ${results.rows[0].id}.`);
     });
 }
 
@@ -54,7 +54,7 @@ var updateVehicle = async function(request, response) {
 
     // Wstepne wartosci kodu i tresci odpowiedzi HTTP.
     let responseCode = 200;
-    let responseMsg = `Vehicle with ID ${id} updated`;
+    let responseMsg = `Dane pojazdu o ID nr ${id} zostały zaktualizowane.`;
 
     // Odczyt wpisu o podanym ID z bazy danych celem uzupelnienia
     // brakujacych danych wymaganych dla kwerendy UPDATE.
@@ -65,39 +65,45 @@ var updateVehicle = async function(request, response) {
             if (err)
                 return reject(err);
 
-            resolve(results.rows[0]);
+            resolve(results.rows);
         });
     })
     .then((vehicle) => {
-        if (brand == undefined)
-            brand = vehicle.brand;
+        if (vehicle.length != 0) {
+            if (brand == undefined)
+                brand = vehicle[0].brand;
 
-        if (model == undefined)
-            model = vehicle.model;
+            if (model == undefined)
+                model = vehicle[0].model;
 
-        if (vrn == undefined)
-            vrn = vehicle.vrn;
+            if (vrn == undefined)
+                vrn = vehicle[0].vrn;
 
-        if (person == undefined)
-            person = vehicle.person;
+            if (person == undefined)
+                person = vehicle[0].person;
 
-        if (vin == undefined)
-            vin = vehicle.vin;
+            if (vin == undefined)
+                vin = vehicle[0].vin;
 
-        if (yr_prod == undefined)
-            yr_prod = vehicle.yr_prod;
+            if (yr_prod == undefined)
+                yr_prod = vehicle[0].yr_prod;
         
-        if (mileage == undefined)
-            mileage = vehicle.mileage;
+            if (mileage == undefined)
+                mileage = vehicle[0].mileage;
 
-        if (eng_cpct == undefined)
-            eng_cpct = vehicle.eng_cpct;
+            if (eng_cpct == undefined)
+                eng_cpct = vehicle[0].eng_cpct;
 
-        if (eng_type == undefined)
-            eng_type = vehicle.eng_type;
+            if (eng_type == undefined)
+                eng_type = vehicle[0].eng_type;
+        } else {
+            responseCode = 404;
+            responseMsg = `Nie znaleziono`;
+            lastOpFailed = !lastOpFailed;
+        }
     })
     .catch((err) => {
-        responseCode = 400;
+        responseCode = 500;
         responseMsg = `Error: ${err.message} (${err.code})`;
         lastOpFailed = !lastOpFailed;
     });
@@ -117,7 +123,7 @@ var updateVehicle = async function(request, response) {
             });
         })
         .catch((err) => {
-            responseCode = 400;
+            responseCode = 500;
             responseMsg = `Error: ${err.message} (${err.code})`;
         });
     }
@@ -133,9 +139,9 @@ var deleteVehicle = function (request, response) {
 
     pool.query('DELETE FROM vc_vehicles WHERE id = $1', [id], (err, _results) => {
         if (err)
-            response.status(400).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Error: ${err.message} (${err.code})`);
         else
-            response.status(200).send(`Vehicle with ID ${id} deleted`);
+            response.status(200).send(`Pojazd o ID nr ${id} został usunięty.`);
     });
 }
 
