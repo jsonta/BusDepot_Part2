@@ -19,11 +19,10 @@ var getResultById = function(request, response) {
         if (err)
             response.status(500).send(`Error: ${err.message} (${err.code})`);
         else {
-            if (results.rows.length == 0) {
+            if (results.rows.length == 0)
                 response.status(404).send("Nie znaleziono");
-            } else {
+            else
                 response.status(200).json(results.rows[0]);
-            }
         }
     });
 }

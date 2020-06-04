@@ -12,7 +12,7 @@ router.post('/logExit', function(req, res) { exits.logExit(req, res) });
 
 /**
  * @swagger
- * /api/getDeparturesList:
+ * /dispatcher/getDeparturesList:
  *      get:
  *          tags:
  *              - "Departures"
@@ -29,7 +29,7 @@ router.post('/logExit', function(req, res) { exits.logExit(req, res) });
  *                                  $ref: "#/components/schemas/DepExitDetails"
  *              "500":
  *                  description: "Błąd serwera SQL"
- * /api/getDepartureById/{id}:
+ * /dispatcher/getDepartureById/{id}:
  *      get:
  *          tags:
  *              - "Departures"
@@ -56,7 +56,7 @@ router.post('/logExit', function(req, res) { exits.logExit(req, res) });
  *                  description: "Nie znaleziono"
  *              "500":
  *                  description: "Błąd serwera SQL"
- * /api/logDeparture:
+ * /dispatcher/logDeparture:
  *      post:
  *          tags:
  *              - "Departures"
@@ -76,7 +76,7 @@ router.post('/logExit', function(req, res) { exits.logExit(req, res) });
  *                  description: "Błąd po stronie klienta"
  *              "500":
  *                  description: "Błąd serwera SQL"
- * /api/getExitsList:
+ * /dispatcher/getExitsList:
  *  get:
  *      tags:
  *          - "Exits"
@@ -93,7 +93,7 @@ router.post('/logExit', function(req, res) { exits.logExit(req, res) });
  *                              $ref: "#/components/schemas/DepExitDetails"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/getExitById/{id}:
+ * /dispatcher/getExitById/{id}:
  *  get:
  *      tags:
  *          - "Exits"
@@ -120,7 +120,7 @@ router.post('/logExit', function(req, res) { exits.logExit(req, res) });
  *              description: "Nie znaleziono"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/logExit:
+ * /dispatcher/logExit:
  *  post:
  *      tags:
  *          - "Exits"

@@ -34,12 +34,8 @@ var getExitById = function(request, response) {
 var logExit = async function (request, response) {
     // Odczyt danych z ciala przeslanego zadania HTTP.
     let {
-        brigade, bus_id, driver
+        brigade, bus, driver
     } = request.body;
-
-    // Wstepne wartosci kodu i tresci odpowiedzi HTTP.
-    let responseCode = 200;
-    let responseMsg = 'OK';
 
     // Wstepne wartosci statusow zajetosci zasobow.
     let brigadeInSrv = true;
@@ -47,115 +43,87 @@ var logExit = async function (request, response) {
     let driverInSrv = true;
     
     // Odczyt wartosci statusow zajetosci zasobow z bazy danych.
-    let lastOpFailed = false;
-
     await resources.getBrigadeInSrvStatus(brigade)
     .then((in_service) => brigadeInSrv = !!in_service)
     .catch((err) => {
         if (err.code == 404) {
-            responseCode = err.code;
-            responseMsg = err.message;
+            response.status(404).send(err.message);
+            return;
         } else {
-            responseCode = 500;
-            responseMsg = `${err.message} (SQL code: ${err.code})`;
+            response.status(500).send(`${err.message} (SQL code: ${err.code})`);
+            return;
         }
-        lastOpFailed = !lastOpFailed;
     });
 
-    if (!lastOpFailed) {
-        await resources.getBusInSrvStatus(bus_id)
-        .then((in_service) => busInSrv = !!in_service)
-        .catch((err) => {
-            if (err.code == 404) {
-                responseCode = err.code;
-                responseMsg = err.message;
-            } else {
-                responseCode = 500;
-                responseMsg = `${err.message} (SQL code: ${err.code})`;
-            }
-            lastOpFailed = !lastOpFailed;
-        });
-    }
+    await resources.getBusInSrvStatus(bus)
+    .then((in_service) => busInSrv = !!in_service)
+    .catch((err) => {
+        if (err.code == 404) {
+            response.status(404).send(err.message);
+            return;
+        } else {
+            response.status(500).send(`${err.message} (SQL code: ${err.code})`);
+            return;
+        }
+    });
 
-    if (!lastOpFailed) {
-        await resources.getDriverInSrvStatus(driver)
-        .then((in_service) => driverInSrv = !!in_service)
-        .catch((err) => {
-            if (err.code == 404) {
-                responseCode = err.code;
-                responseMsg = err.message;
-            } else {
-                responseCode = 500;
-                responseMsg = `${err.message} (SQL code: ${err.code})`;
-            }
-            lastOpFailed = !lastOpFailed;
-        });
-    }
+    await resources.getDriverInSrvStatus(driver)
+    .then((in_service) => driverInSrv = !!in_service)
+    .catch((err) => {
+        if (err.code == 404) {
+            response.status(404).send(err.message);
+            return;
+        } else {
+            response.status(500).send(`${err.message} (SQL code: ${err.code})`);
+            return;
+        }
+    });
     
     // Sprawdzenie czy wszystkie potrzebne zasoby sa wolne.
     // Wykona się tylko wtedy, jesli po drodze nie wystapil
     // zaden blad podczas odczytu z bazy danych.
-    let resourcesBusy = false;
-    if (!lastOpFailed) {
-        if (brigadeInSrv) {
-            if (busInSrv) {
-                if (driverInSrv) {
-                    resourcesBusy = !resourcesBusy;
-                } else {
-                    responseCode = 400;
-                    responseMsg = "Podany kierowca nie jest nigdzie obsadzony.";
-                }
-            } else {
-                responseCode = 400;
-                responseMsg = "Podany autobus nie jest nigdzie obsadzony.";
-            }
-        } else {
-            responseCode = 400;
-            responseMsg = "Podana brygada nie jest obsadzona.";
-        }
+    if (!brigadeInSrv) {
+        response.status(400).send("Podana brygada nie jest nigdzie obsadzona.");
+        return;
+    } else if (!busInSrv) {
+        response.status(400).send("Podany autobus nie jest nigdzie obsadzony.");
+        return;
+    } else if (!driverInSrv) {
+        response.status(400).send("Podany kierowca nie jest nigdzie obsadzony.");
+        return;
     }
 
     // Odnotowanie zjazdu do zajezdni w bazie danych.
     // Wykona sie tylko wtedy, jesli zasoby sa zajete
     // i po drodze nie wystapil zaden blad podczas
     // odczytu z bazy danych.
-    if (resourcesBusy) {
-        let dateNow = moment();
-        await new Promise((resolve, reject) => {
-            pool.query('INSERT INTO exits (date, time, brigade, bus_id, driver) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [dateNow.format('YYYY-MM-DD'), dateNow.format('HH:mm:ss'), brigade, bus_id, driver],
-            (err, results) => {
-                if (err)
-                    return reject(err);
+    let dateNow = moment();
+    await new Promise((resolve, reject) => {
+        pool.query('INSERT INTO exits (date, time, brigade, bus, driver) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        [dateNow.format('YYYY-MM-DD'), dateNow.format('HH:mm:ss'), brigade, bus, driver],
+        (err, results) => {
+            if (err)
+                return reject(err);
     
-                resolve(results.rows[0]);
-            });
-        })
-        .then((exit) => {
-            responseMsg = `Zjazd do zajezdni o ID nr ${exit.id} został wyewidencjonowany.`;
-        })
-        .catch((err) => {
-            responseCode = 500;
-            responseMsg = `${err.message} (SQL code: ${err.code})`;
-            lastOpFailed = !lastOpFailed;
+            resolve(results.rows[0]);
         });
-    }
+    })
+    .then((exit) => response.status(200).send(`Zjazd do zajezdni o ID nr ${exit.id} został wyewidencjonowany.`))
+    .catch((err) => {
+        response.status(500).send(`${err.message} (SQL code: ${err.code})`);
+        return;
+    });
 
     // Zmiana statusu zajetosci zasobow uzytych do wyjazdu.
     // Wykona się tylko wtedy, jesli nie wystapil blad
     // podczas zapisu informacji do bazy danych.
-    if (!lastOpFailed) {
-        brigadeInSrv = !brigadeInSrv;
-        busInSrv = !busInSrv;
-        driverInSrv = !driverInSrv;
+    brigadeInSrv = !brigadeInSrv;
+    busInSrv = !busInSrv;
+    driverInSrv = !driverInSrv;
         
-        await resources.updBrigadeInSrvStatus(brigade, brigadeInSrv);
-        await resources.updBusInSrvStatus(bus_id, busInSrv);
-        await resources.updDriverInSrvStatus(driver, driverInSrv);
-    }
-
-    // Wyslanie odpowiedzi HTTP
-    response.status(responseCode).send(responseMsg);
+    await resources.updBrigadeInSrvStatus(brigade, brigadeInSrv);
+    await resources.updBusInSrvStatus(bus, busInSrv);
+    await resources.updDriverInSrvStatus(driver, driverInSrv);
 }
 
 // Eksport funkcji do uzytku na zewnatrz

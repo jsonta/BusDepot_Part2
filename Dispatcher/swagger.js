@@ -6,7 +6,7 @@ const options = {
         info: {
             title: 'BusDepot (Dispatcher)',
             description: 'Mikroserwis zarządzający ewidencją wyjazdów i zjazdów do zajezdni.',
-            version: '20200523',
+            version: '20200603',
             contact: {
                 "name": "Jakub Sońta",
                 "url": "https://github.com/jsonta",
@@ -27,20 +27,20 @@ const options = {
                     properties: {
                         id: {
                             type: "integer",
-                            description: "Identyfikator wyjazdu/zjazdu z/do zajezdni.",
+                            description: "Identyfikator wyjazdu/zjazdu z/do zajezdni (generowany automatycznie).",
                             example: 1
                         },
                         date: {
                             type: "string",
                             description: "Data wyjazdu/zjazdu z/do zajezdni. Baza danych przechowuje w tej kolumnie TYLKO datę.",
                             pattern: "\\d{4}-\\d{2}-\\d{2}",
-                            example: "2020-05-08"
+                            example: "2020-06-01"
                         },
                         time: {
                             type: "string",
                             description: "Godzina wyjazdu/zjazdu z/do zajezdni.",
                             pattern: "\\d{2}:\\d{2}:\\d{2}",
-                            example: "22:00:00"
+                            example: "06:00:00"
                         },
                         brigade: {
                             type: "string",
@@ -55,8 +55,8 @@ const options = {
                         },
                         driver: {
                             type: "integer",
-                            description: "Identyfikator (nr PESEL) kierowcy wyjeżdżającego/zjeżdżającego.",
-                            example: 99123100000
+                            description: "Identyfikator kierowcy wyjeżdżającego/zjeżdżającego.",
+                            example: 1
                         }
                     }
                 },
@@ -76,8 +76,8 @@ const options = {
                         },
                         driver: {
                             type: "integer",
-                            description: "Identyfikator (nr PESEL) kierowcy wyjeżdżającego/zjeżdżającego.",
-                            example: 99123100000
+                            description: "Identyfikator kierowcy wyjeżdżającego/zjeżdżającego.",
+                            example: 1
                         }
                     },
                     required: [

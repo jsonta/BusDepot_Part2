@@ -19,11 +19,10 @@ var getPersonById = function(request, response) {
         if (err)
             response.status(500).send(`Error: ${err.message} (${err.code})`);
         else {
-            if (results.rows.length == 0) {
+            if (results.rows.length == 0)
                 response.status(404).send("Nie znaleziono");
-            } else {
+            else
                 response.status(200).json(results.rows[0]);
-            }
         }
     });
 }
@@ -31,17 +30,17 @@ var getPersonById = function(request, response) {
 // Funkcja HTTP POST dla tabeli vc_persons.
 var postPerson = function(request, response) {
     let {
-        id, fname, lname, idcard, phone, email, bday_date, addr_strtname, addr_bldgname, addr_apmtname, city, zip
+        fname, lname, idcard, phone, email, bday_date, addr_strtname, addr_bldgname, addr_apmtname, city, zip
     } = request.body;
     bday_date = moment(bday_date, "YYYY-MM-DD");
 
-    pool.query('INSERT INTO vc_persons VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
-    [id, fname, lname, idcard, phone, email, bday_date, addr_strtname, addr_bldgname, addr_apmtname, city, zip],
-    (err, _results) => {
+    pool.query('INSERT INTO vc_persons VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
+    [fname, lname, idcard, phone, email, bday_date, addr_strtname, addr_bldgname, addr_apmtname, city, zip],
+    (err, results) => {
         if (err)
             response.status(500).send(`Error: ${err.message} (${err.code})`);
         else
-            response.status(201).send(`Dodano nową osobę o ID nr ${id}.`);
+            response.status(201).send(`Dodano nową osobę o ID nr ${results.rows[0].id}.`);
     });
 }
 

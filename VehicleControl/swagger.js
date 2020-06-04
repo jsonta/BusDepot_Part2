@@ -6,7 +6,7 @@ const options = {
         info: {
             title: 'BusDepot (VehicleControl)',
             description: 'Mikroserwis zarządzający ewidencją wewnętrznej stacji kontroli pojazdów.',
-            version: '20200523',
+            version: '20200603',
             contact: {
                 "name": "Jakub Sońta",
                 "url": "https://github.com/jsonta",
@@ -28,8 +28,8 @@ const options = {
                     properties: {
                         id: {
                             type: "integer",
-                            description: "Identyfikator (nr PESEL) osoby zlecającej kontrolę pojazdu.",
-                            example: 99123100000
+                            description: "Identyfikator osoby zlecającej kontrolę pojazdu (generowany automatycznie).",
+                            example: 1
                         },
                         fname: {
                             type: "string",
@@ -41,16 +41,27 @@ const options = {
                             description: "Nazwisko osoby zlecającej kontrolę pojazdu.",
                             example: "Kowalski"
                         },
+                        pesel: {
+                            type: "string",
+                            description: "Identyfikator (nr PESEL) osoby zlecającej kontrolę pojazdu.",
+                            example: "99123100000"
+                        },
                         idcard: {
                             type: "string",
                             description: "Seria i numer dowodu osobistego osoby zlecającej kontrolę pojazdu.",
                             pattern: "([A-Z]){3}\\d{6}",
                             example: "XYZ123456"
                         },
+                        bday_date: {
+                            type: "string",
+                            description: "Data urodzenia osoby zlecającej kontrolę pojazdu (YYYY-MM-DD). Baza danych przechowuje w tej kolumnie TYLKO datę.",
+                            pattern: "\\d{4}-\\d{2}-\\d{2}",
+                            example: "2020-05-08"
+                        },
                         phone: {
-                            type: "integer",
+                            type: "string",
                             description: "Numer telefonu osoby zlecającej kontrolę pojazdu.",
-                            example: 123456789
+                            example: "123456789"
                         },
                         email: {
                             type: "string",
@@ -58,23 +69,17 @@ const options = {
                             pattern: "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$",
                             example: "nazwa@domena.pl"
                         },
-                        bday_date: {
-                            type: "string",
-                            description: "Data urodzenia osoby zlecającej kontrolę pojazdu (YYYY-MM-DD).",
-                            pattern: "\\d{4}-\\d{2}-\\d{2}",
-                            example: "2020-05-08"
-                        },
-                        addr_strtname: {
+                        street: {
                             type: "string",
                             description: "Adres zamieszkania osoby zlecającej kontrolę pojazdu - nazwa ulicy.",
                             example: "Stacyjna"
                         },
-                        addr_bldgnmbr: {
+                        building: {
                             type: "integer",
                             description: "Adres zamieszkania osoby zlecającej kontrolę pojazdu - numer budynku.",
                             example: 1
                         },
-                        addr_apmtname: {
+                        apartment: {
                             type: "integer",
                             description: "Adres zamieszkania osoby zlecającej kontrolę pojazdu - numer lokalu/mieszkania (opcjonalny).",
                             example: 2
@@ -92,14 +97,14 @@ const options = {
                         }
                     },
                     required: [
-                        "id",
                         "fname",
                         "lname",
+                        "pesel",
                         "idcard",
                         "phone",
                         "bday_date",
-                        "addr_strtname",
-                        "addr_bldgnmbr",
+                        "street",
+                        "building",
                         "city",
                         "zip"
                     ]
@@ -107,14 +112,14 @@ const options = {
                 Result: {
                     type: "object",
                     properties: {
-                        id: {
-                            type: "integer",
-                            description: "Identyfikator wyników kontroli.",
-                            example: 1
-                        },
-                        car_id: {
+                        car: {
                             type: "integer",
                             description: "Identyfikator pojazdu poddanego kontroli.",
+                            example: 1
+                        },
+                        person: {
+                            type: "integer",
+                            description: "Identyfikator osoby zlecającej kontrolę.",
                             example: 1
                         },
                         cntl_date: {
@@ -125,7 +130,7 @@ const options = {
                         },
                         cntl_time: {
                             type: "string",
-                            description: "Godzina przeprowadzenia kontroli.",
+                            description: "Godzina przeprowadzenia kontroli. Baza danych przechowuje w tej kolumnie TYLKO godzinę.",
                             pattern: "\\\\d{2}:\\\\d{2}:\\\\d{2}",
                             example: "22:00:00"
                         },
@@ -157,7 +162,8 @@ const options = {
                     },
                     required: [
                         "id",
-                        "car_id",
+                        "car",
+                        "person",
                         "cntl_date",
                         "cntl_time",
                         "brkds_front_test",
@@ -172,7 +178,7 @@ const options = {
                     properties: {
                         id: {
                             type: "integer",
-                            description: "Identyfikator pojazdu poddanego kontroli.",
+                            description: "Identyfikator pojazdu poddanego kontroli (generowany automatycznie).",
                             example: 1
                         },
                         brand: {
@@ -192,8 +198,8 @@ const options = {
                         },
                         person: {
                             type: "integer",
-                            description: "Identyfikator (numer ID) pojazdu osoby zlecającej kontrolę pojazdu.",
-                            example: 99123100000
+                            description: "Identyfikator osoby zlecającej kontrolę.",
+                            example: 1
                         },
                         vin: {
                             type: "string",
@@ -221,7 +227,6 @@ const options = {
                         }
                     },
                     required: [
-                        "id",
                         "brand",
                         "model",
                         "vrn",

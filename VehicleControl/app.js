@@ -6,10 +6,10 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 const routes = require('./routes.js');
-app.use('/api', routes);
+app.use('/vehicleControl', routes);
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger.js');
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.listen(5003);
+app.listen(5004);

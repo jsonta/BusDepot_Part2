@@ -23,7 +23,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
 
 /**
  * @swagger
- * /api/getPersonsList:
+ * /vehiclecontrol/getPersonsList:
  *  get:
  *      tags:
  *          - "Persons"
@@ -40,7 +40,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *                              $ref: "#/components/schemas/Person"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/getPersonById/{id}:
+ * /vehiclecontrol/getPersonById/{id}:
  *  get:
  *      tags:
  *          - "Persons"
@@ -67,7 +67,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *              description: "Nie znaleziono"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/postPerson:
+ * /vehiclecontrol/postPerson:
  *  post:
  *      tags:
  *          - "Persons"
@@ -84,7 +84,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *              description: "Utworzono pomyślnie"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/updatePerson/{id}:
+ * /vehiclecontrol/updatePerson/{id}:
  *  put:
  *      tags:
  *          - "Persons"
@@ -111,7 +111,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *              description: "Nie znaleziono"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/deletePerson/{id}:
+ * /vehiclecontrol/deletePerson/{id}:
  *  delete:
  *      tags:
  *          - "Persons"
@@ -133,7 +133,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *          "500":
  *              description: "Błąd serwera SQL"
  * 
- * /api/getResultsList:
+ * /vehiclecontrol/getResultsList:
  *  get:
  *      tags:
  *          - "Results"
@@ -150,7 +150,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *                              $ref: "#/components/schemas/Result"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/getResultsById/{id}:
+ * /vehiclecontrol/getResultsById/{id}:
  *  get:
  *      tags:
  *          - "Results"
@@ -177,7 +177,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *              description: "Nie znaleziono"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/postResult:
+ * /vehiclecontrol/postResult:
  *  post:
  *      tags:
  *          - "Results"
@@ -194,7 +194,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *              description: "Utworzono pomyślnie"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/updateResult/{id}:
+ * /vehiclecontrol/updateResult/{id}:
  *  put:
  *      tags:
  *          - "Results"
@@ -221,7 +221,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *              description: "Nie znaleziono"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/deleteResult/{id}:
+ * /vehiclecontrol/deleteResult/{id}:
  *  delete:
  *      tags:
  *          - "Results"
@@ -243,7 +243,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *          "500":
  *              description: "Błąd serwera SQL"
  * 
- * /api/getVehiclesList:
+ * /vehiclecontrol/getVehiclesList:
  *  get:
  *      tags:
  *          - "Vehicles"
@@ -260,7 +260,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *                              $ref: "#/components/schemas/Vehicle"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/getVehicleById/{id}:
+ * /vehiclecontrol/getVehicleById/{id}:
  *  get:
  *      tags:
  *          - "Vehicles"
@@ -287,7 +287,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *              description: "Nie znaleziono"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/postVehicle:
+ * /vehiclecontrol/postVehicle:
  *  post:
  *      tags:
  *          - "Vehicles"
@@ -304,7 +304,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *              description: "Dodano pomyślnie"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/updateVehicle/{id}:
+ * /vehiclecontrol/updateVehicle/{id}:
  *  put:
  *      tags:
  *          - "Vehicles"
@@ -331,7 +331,7 @@ router.delete('/deleteResult/:id', function(req, res) { results.deleteResult(req
  *              description: "Nie znaleziono"
  *          "500":
  *              description: "Błąd serwera SQL"
- * /api/deleteVehicle/{id}:
+ * /vehiclecontrol/deleteVehicle/{id}:
  *  delete:
  *      tags:
  *          - "Vehicles"
