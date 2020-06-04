@@ -6,7 +6,7 @@ const moment = require('moment');
 var getExitsList = function(_request, response) {
     pool.query('SELECT * FROM exits', (err, results) => {
         if (err)
-            response.status(500).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
         else
             response.status(200).json(results.rows);
     });
@@ -18,7 +18,7 @@ var getExitById = function(request, response) {
     let id = parseInt(request.params.id);
     pool.query('SELECT * FROM exits WHERE id = $1', [id], (err, results) => {
         if (err)
-            response.status(500).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
         else {
             if (results.rows.length == 0) {
                 response.status(404).send("Nie znaleziono");
@@ -50,7 +50,7 @@ var logExit = async function (request, response) {
             response.status(404).send(err.message);
             return;
         } else {
-            response.status(500).send(`${err.message} (SQL code: ${err.code})`);
+            response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
             return;
         }
     });
@@ -62,7 +62,7 @@ var logExit = async function (request, response) {
             response.status(404).send(err.message);
             return;
         } else {
-            response.status(500).send(`${err.message} (SQL code: ${err.code})`);
+            response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
             return;
         }
     });
@@ -74,7 +74,7 @@ var logExit = async function (request, response) {
             response.status(404).send(err.message);
             return;
         } else {
-            response.status(500).send(`${err.message} (SQL code: ${err.code})`);
+            response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
             return;
         }
     });
@@ -110,7 +110,7 @@ var logExit = async function (request, response) {
     })
     .then((exit) => response.status(200).send(`Zjazd do zajezdni o ID nr ${exit.id} został wyewidencjonowany.`))
     .catch((err) => {
-        response.status(500).send(`${err.message} (SQL code: ${err.code})`);
+        response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
         return;
     });
 

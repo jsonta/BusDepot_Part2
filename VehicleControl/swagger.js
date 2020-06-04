@@ -112,6 +112,11 @@ const options = {
                 Result: {
                     type: "object",
                     properties: {
+                        id: {
+                            type: "integer",
+                            description: "Identyfikator wyniku kontrolę pojazdu (generowany automatycznie).",
+                            example: 1
+                        },
                         car: {
                             type: "integer",
                             description: "Identyfikator pojazdu poddanego kontroli.",
@@ -161,7 +166,6 @@ const options = {
                         }
                     },
                     required: [
-                        "id",
                         "car",
                         "person",
                         "cntl_date",

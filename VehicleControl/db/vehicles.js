@@ -4,7 +4,7 @@ const pool = require('./pool.js');
 var getVehiclesList = function(_request, response) {
     pool.query('SELECT * FROM vc_vehicles', (err, results) => {
         if (err)
-            response.status(500).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
         else
             response.status(200).json(results.rows);
     });
@@ -16,7 +16,7 @@ var getVehicleById = function(request, response) {
     let id = parseInt(request.params.id);
     pool.query('SELECT * FROM vc_vehicles WHERE id = $1', [id], (err, results) => {
         if (err)
-            response.status(500).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
         else {
             if (results.rows.length == 0)
                 response.status(404).send("Nie znaleziono");
@@ -36,7 +36,7 @@ var postVehicle = function(request, response) {
     [brand, model, vrn, person, vin, yr_prod, mileage, eng_cpct, eng_type],
     (err, results) => {
         if (err)
-            response.status(500).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
         else
             response.status(201).send(`Dodano nowy pojazd o ID nr ${results.rows[0].id}.`);
     });
@@ -50,14 +50,6 @@ var updateVehicle = async function(request, response) {
     let {
         brand, model, vrn, person, vin, yr_prod, mileage, eng_cpct, eng_type
     } = request.body;
-
-    // Wstepne wartosci kodu i tresci odpowiedzi HTTP.
-    let responseCode = 200;
-    let responseMsg = `Dane pojazdu o ID nr ${id} zostały zaktualizowane.`;
-
-    // Odczyt wpisu o podanym ID z bazy danych celem uzupelnienia
-    // brakujacych danych wymaganych dla kwerendy UPDATE.
-    let lastOpFailed = false;
 
     await new Promise((resolve, reject) => {
         pool.query('SELECT * FROM vc_vehicles WHERE id = $1', [id], (err, results) => {
@@ -96,51 +88,53 @@ var updateVehicle = async function(request, response) {
             if (eng_type == undefined)
                 eng_type = vehicle[0].eng_type;
         } else {
-            responseCode = 404;
-            responseMsg = `Nie znaleziono`;
-            lastOpFailed = !lastOpFailed;
+            response.status(404).send("Nie znaleziono");
+            return;
         }
     })
     .catch((err) => {
-        responseCode = 500;
-        responseMsg = `Error: ${err.message} (${err.code})`;
-        lastOpFailed = !lastOpFailed;
+        response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
+        return;
     });
 
     // Aktualizacja wpisu w bazie danych.
     // Wykona się tylko wtedy, jesli po drodze nie wystapil
     // zaden blad podczas odczytu z bazy danych.
-    if (!lastOpFailed) {
-        await new Promise((resolve, reject) => {
-            pool.query('UPDATE vc_vehicles SET brand = $2, model = $3, vrn = $4, person = $5, vin = $6, yr_prod = $7, mileage = $8, eng_cpct = $9, eng_type = $10 WHERE id = $1',
-            [id, brand, model, vrn, person, vin, yr_prod, mileage, eng_cpct, eng_type],
-            (err, results) => {
-                if (err)
-                    return reject(err);
+    await new Promise((resolve, reject) => {
+        pool.query('UPDATE vc_vehicles SET brand = $2, model = $3, vrn = $4, person = $5, vin = $6, yr_prod = $7, mileage = $8, eng_cpct = $9, eng_type = $10 WHERE id = $1',
+        [id, brand, model, vrn, person, vin, yr_prod, mileage, eng_cpct, eng_type],
+        (err, results) => {
+            if (err)
+                return reject(err);
 
-                resolve(results);
-            });
-        })
-        .catch((err) => {
-            responseCode = 500;
-            responseMsg = `Error: ${err.message} (${err.code})`;
+            resolve(results);
         });
-    }
-
-    // Wyslanie odpowiedzi HTTP
-    response.status(responseCode).send(responseMsg);
+    })
+    .then(() => response.status(200).send(`Szczegóły pojazdu o ID nr ${id} zostały zaktualizowane.`))
+    .catch((err) => response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`));
 }
 
 // Funkcja HTTP DELETE dla tabeli vc_vehicles,
 // z ID okreslonym w parametrach zadania HTTP.
 var deleteVehicle = function (request, response) {
     let id = parseInt(request.params.id);
-
-    pool.query('DELETE FROM vc_vehicles WHERE id = $1', [id], (err, _results) => {
-        if (err)
-            response.status(500).send(`Error: ${err.message} (${err.code})`);
-        else
-            response.status(200).send(`Pojazd o ID nr ${id} został usunięty.`);
+    pool.query('SELECT * FROM vc_vehicles WHERE id = $1', [id])
+    .then((results) => {
+        if (results.rows.length > 0) {
+            pool.query('DELETE FROM vc_vehicles WHERE id = $1', [id], (err, _results) => {
+                if (err)
+                    response.status(500).send(`Szczegóły pojazdu o ID nr ${id} zostały zaktualizowane.`);
+                else
+                    response.status(200).send(`Pojazd o ID nr ${id} został usunięty.`);
+            });
+        } else {
+            response.status(404).send("Nie znaleziono");
+            return;
+        }
+    })
+    .catch((err) => {
+        response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
+        return;
     });
 }
 

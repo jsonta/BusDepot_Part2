@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "09a3fcb5-e073-4efe-a582-668963de3a68",
+		"_postman_id": "32bbc3a0-06cd-4b11-a881-b0d8f5fc5a61",
 		"name": "VehicleControl",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,14 +11,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5003/api/getpersonslist",
+					"raw": "http://localhost:5004/vehiclecontrol/getpersonslist",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"getpersonslist"
 					]
 				}
@@ -59,17 +59,17 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"id\": 73091483007,\n\t\"fname\": \"Wisława\",\n\t\"lname\": \"Wiśniewska\",\n\t\"idcard\": \"AIF986231\",\n\t\"phone\": 799834619,\n\t\"email\": \"WislawaWisniewska@teleworm.us\",\n\t\"bday_date\": \"1973-09-14\",\n\t\"addr_strtname\": \"Jodłowa\",\n\t\"addr_bldgname\": 107,\n\t\"city\": \"Świętochłowice\",\n\t\"zip\": \"41-608\"\n}"
+					"raw": "{\n\t\"fname\": \"Wisława\",\n\t\"lname\": \"Wiśniewska\",\n\t\"pesel\": \"73091483007\",\n\t\"idcard\": \"AIF986231\",\n\t\"bday_date\": \"1973-09-14\",\n\t\"phone\": \"799834619\",\n\t\"email\": \"WislawaWisniewska@teleworm.us\",\n\t\"street\": \"Jodłowa\",\n\t\"building\": 107,\n\t\"city\": \"Świętochłowice\",\n\t\"zip\": \"41-608\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:5003/api/postperson",
+					"raw": "http://localhost:5004/vehiclecontrol/postperson",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"postperson"
 					]
 				}
@@ -89,19 +89,19 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"addr_strtname\": \"Jodłowa\"\n}"
+					"raw": "{\n\t\"street\": \"Świerkowa\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:5003/api/updateperson/73091483007",
+					"raw": "http://localhost:5004/vehiclecontrol/updateperson/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"updateperson",
-						"73091483007"
+						"1"
 					]
 				}
 			},
@@ -123,16 +123,16 @@
 					"raw": "{\n\t\"addr_strtname\": \"Jodłowa\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:5003/api/deleteperson/73091483007",
+					"raw": "http://localhost:5004/vehiclecontrol/deleteperson/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"deleteperson",
-						"73091483007"
+						"1"
 					]
 				}
 			},
@@ -144,14 +144,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5003/api/getvehicleslist",
+					"raw": "http://localhost:5004/vehiclecontrol/getvehicleslist",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"getvehicleslist"
 					]
 				}
@@ -164,14 +164,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5003/api/getvehiclebyid/1",
+					"raw": "http://localhost:5004/vehiclecontrol/getvehiclebyid/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"getvehiclebyid",
 						"1"
 					]
@@ -192,17 +192,17 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"brand\": \"Audi\",\n\t\"model\": \"S3\",\n\t\"vrn\": \"CB 6262P\",\n\t\"person\": 73091483007,\n\t\"vin\": \"WAUBGCFL0A0015376\",\n\t\"yr_prod\": 2009,\n\t\"mileage\": 170000,\n\t\"eng_cpct\": 2000,\n\t\"eng_type\": \"diesel\"\n}"
+					"raw": "{\n\t\"brand\": \"Audi\",\n\t\"model\": \"S3\",\n\t\"vrn\": \"CB 6262P\",\n\t\"person\": 2,\n\t\"vin\": \"WAUBGCFL0A0015376\",\n\t\"yr_prod\": 2009,\n\t\"mileage\": 170000,\n\t\"eng_cpct\": 2000,\n\t\"eng_type\": \"diesel\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:5003/api/postvehicle",
+					"raw": "http://localhost:5004/vehiclecontrol/postvehicle",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"postvehicle"
 					]
 				}
@@ -225,16 +225,16 @@
 					"raw": "{\n\t\"vrn\": \"SK 777LL\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:5003/api/updatevehicle/4",
+					"raw": "http://localhost:5004/vehiclecontrol/updatevehicle/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"updatevehicle",
-						"4"
+						"1"
 					]
 				}
 			},
@@ -251,19 +251,15 @@
 						"type": "text"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"addr_strtname\": \"Jodłowa\"\n}"
-				},
 				"url": {
-					"raw": "http://localhost:5003/api/deletevehicle/1",
+					"raw": "http://localhost:5004/vehiclecontrol/deletevehicle/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"deletevehicle",
 						"1"
 					]
@@ -277,14 +273,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5003/api/getresultslist",
+					"raw": "http://localhost:5004/vehiclecontrol/getresultslist",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"getresultslist"
 					]
 				}
@@ -297,14 +293,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5003/api/getresultbyid/1",
+					"raw": "http://localhost:5004/vehiclecontrol/getresultbyid/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"getresultbyid",
 						"1"
 					]
@@ -325,17 +321,17 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"car_id\": 4,\n\t\"brkds_front_test\": true,\n\t\"brkpd_front_test\": true,\n\t\"brkds_rear_test\": true,\n\t\"brkpd_rear_test\": true,\n\t\"brkdrum_test\": true\n}"
+					"raw": "{\n\t\"car\": 2,\n\t\"person\": 2,\n\t\"brkds_front_test\": true,\n\t\"brkpd_front_test\": true,\n\t\"brkds_rear_test\": true,\n\t\"brkpd_rear_test\": true,\n\t\"brkdrum_test\": true\n}"
 				},
 				"url": {
-					"raw": "http://localhost:5003/api/postresult",
+					"raw": "http://localhost:5004/vehiclecontrol/postresult",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"postresult"
 					]
 				}
@@ -358,16 +354,16 @@
 					"raw": "{\n\t\"brkdrum_test\": false\n}"
 				},
 				"url": {
-					"raw": "http://localhost:5003/api/updateresult/2",
+					"raw": "http://localhost:5004/vehiclecontrol/updateresult/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"updateresult",
-						"2"
+						"1"
 					]
 				}
 			},
@@ -389,14 +385,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:5003/api/deleteresult/1",
+					"raw": "http://localhost:5004/vehiclecontrol/deleteresult/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5003",
+					"port": "5004",
 					"path": [
-						"api",
+						"vehiclecontrol",
 						"deleteresult",
 						"1"
 					]

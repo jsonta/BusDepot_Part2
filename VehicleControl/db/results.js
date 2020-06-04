@@ -5,7 +5,7 @@ const moment = require('moment');
 var getResultsList = function(_request, response) {
     pool.query('SELECT * FROM vc_results', (err, results) => {
         if (err)
-            response.status(500).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
         else
             response.status(200).json(results.rows);
     });
@@ -17,7 +17,7 @@ var getResultById = function(request, response) {
     let id = parseInt(request.params.id);
     pool.query('SELECT * FROM vc_results WHERE id = $1', [id], (err, results) => {
         if (err)
-            response.status(500).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
         else {
             if (results.rows.length == 0)
                 response.status(404).send("Nie znaleziono");
@@ -31,14 +31,14 @@ var getResultById = function(request, response) {
 var postResult = function(request, response) {
     let dateNow = moment();
     let {
-        car_id, brkds_front_test, brkpd_front_test, brkds_rear_test, brkpd_rear_test, brkdrum_test
+        car, person, brkds_front_test, brkpd_front_test, brkds_rear_test, brkpd_rear_test, brkdrum_test
     } = request.body;
 
-    pool.query('INSERT INTO vc_results (car_id, cntl_date, cntl_time, brkds_front_test, brkpd_front_test, brkds_rear_test, brkpd_rear_test, brkdrum_test) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-    [car_id, dateNow.format('YYYY-MM-DD'), dateNow.format('HH:mm:ss'), brkds_front_test, brkpd_front_test, brkds_rear_test, brkpd_rear_test, brkdrum_test],
+    pool.query('INSERT INTO vc_results (car, person, cntl_date, cntl_time, brkds_front_test, brkpd_front_test, brkds_rear_test, brkpd_rear_test, brkdrum_test) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+    [car, person, dateNow.format('YYYY-MM-DD'), dateNow.format('HH:mm:ss'), brkds_front_test, brkpd_front_test, brkds_rear_test, brkpd_rear_test, brkdrum_test],
     (err, results) => {
         if (err)
-            response.status(500).send(`Error: ${err.message} (${err.code})`);
+            response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
         else
             response.status(201).send(`Dodano nowy wynik kontroli o ID nr ${results.rows[0].id}.`);
     });
@@ -52,14 +52,6 @@ var updateResult = async function(request, response) {
     let {
         brkds_front_test, brkpd_front_test, brkds_rear_test, brkpd_rear_test, brkdrum_test
     } = request.body;
-
-    // Wstepne wartosci kodu i tresci odpowiedzi HTTP.
-    let responseCode = 200;
-    let responseMsg = `Szczegóły wyniku kontroli o ID nr ${id} zostały zaktualizowane.`;
-
-    // Odczyt wpisu o podanym ID z bazy danych celem uzupelnienia
-    // brakujacych danych wymaganych dla kwerendy UPDATE.
-    let lastOpFailed = false;
 
     await new Promise((resolve, reject) => {
         pool.query('SELECT * FROM vc_results WHERE id = $1', [id], (err, results) => {
@@ -86,51 +78,53 @@ var updateResult = async function(request, response) {
             if (brkdrum_test == undefined)
                 brkdrum_test = result[0].brkdrum_test;
         } else {
-            responseCode = 404;
-            responseMsg = `Nie znaleziono`;
-            lastOpFailed = !lastOpFailed;
+            response.status(404).send("Nie znaleziono");
+            return;
         }
     })
     .catch((err) => {
-        responseCode = 500;
-        responseMsg = `Error: ${err.message} (${err.code})`;
-        lastOpFailed = !lastOpFailed;
+        response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
+        return;
     });
 
     // Aktualizacja wpisu w bazie danych.
     // Wykona się tylko wtedy, jesli po drodze nie wystapil
     // zaden blad podczas odczytu z bazy danych.
-    if (!lastOpFailed) {
-        await new Promise((resolve, reject) => {
-            pool.query('UPDATE vc_results SET brkds_front_test = $2, brkds_rear_test = $3, brkpd_front_test = $4, brkpd_rear_test = $5, brkdrum_test = $6 WHERE id = $1',
-            [id, brkds_front_test, brkds_rear_test, brkpd_front_test, brkpd_rear_test, brkdrum_test],
-            (err, results) => {
-                if (err)
-                    return reject(err);
+    await new Promise((resolve, reject) => {
+        pool.query('UPDATE vc_results SET brkds_front_test = $2, brkds_rear_test = $3, brkpd_front_test = $4, brkpd_rear_test = $5, brkdrum_test = $6 WHERE id = $1',
+        [id, brkds_front_test, brkds_rear_test, brkpd_front_test, brkpd_rear_test, brkdrum_test],
+        (err, results) => {
+            if (err)
+                return reject(err);
 
-                resolve(results);
-            });
-        })
-        .catch((err) => {
-            responseCode = 500;
-            responseMsg = `Error: ${err.message} (${err.code})`;
+            resolve(results);
         });
-    }
-
-    // Wyslanie odpowiedzi HTTP
-    response.status(responseCode).send(responseMsg);
+    })
+    .then(() => response.status(200).send(`Szczegóły wyniku kontroli o ID nr ${id} zostały zaktualizowane.`))
+    .catch((err) => response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`));
 }
 
 // Funkcja HTTP DELETE dla tabeli vc_results,
 // z ID okreslonym w parametrach zadania HTTP.
 var deleteResult = function (request, response) {
     let id = parseInt(request.params.id);
-
-    pool.query('DELETE FROM vc_results WHERE id = $1', [id], (err, _results) => {
-        if (err)
-            response.status(500).send(`Error: ${err.message} (${err.code})`);
-        else
-            response.status(200).send(`Wynik kontroli o ID nr ${id} został usunięty.`);
+    pool.query('SELECT * FROM vc_results WHERE id = $1', [id])
+    .then((results) => {
+        if (results.rows.length > 0) {
+            pool.query('DELETE FROM vc_results WHERE id = $1', [id], (err, _results) => {
+                if (err)
+                    response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
+                else
+                    response.status(200).send(`Wynik kontroli o ID nr ${id} został usunięty.`);
+            });
+        } else {
+            response.status(404).send("Nie znaleziono");
+            return;
+        }
+    })
+    .catch((err) => {
+        response.status(500).send(`Błąd serwera SQL - ${err.message} (kod ${err.code}).`);
+        return;
     });
 }
 
